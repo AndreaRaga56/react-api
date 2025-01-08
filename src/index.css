@@ -1,0 +1,35 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.container{
+    width: 80%;
+    max-width: 1000px;
+}
+
+.post-card{
+    background-color: rgba(250, 235, 215, 0.588);
+    border-radius: 10px;
+    max-width: 330px;
+    position: relative;
+}
+
+.imm{
+    margin-bottom: 5px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    max-width: 100%;
+}
+
+.card-inside{
+    padding: 10px;
+}
+
+.del{
+    position: absolute;
+    border-radius: 10px;
+    bottom: 5px;
+    right: 5px;
+}
