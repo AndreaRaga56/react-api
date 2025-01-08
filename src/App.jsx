@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from 'axios';
-import { useEffect } from "react";
 
 function App() {
-  
+
   let protoPost = {
     title: "",
     image: "",
@@ -32,28 +31,27 @@ function App() {
     event.preventDefault()
 
     // console.log(newPost)
-    axios.post(`${apiUrl}/posts`, post).then((resp)=>{
-      let newPost=resp.data
-      let newListaPosts = [...listaPosts, newPost]
+    axios.post(`${apiUrl}/posts`, post).then((resp) => {
+      let newPost = resp.data;
+      let newListaPosts = [...listaPosts, newPost];
       setListaPosts(newListaPosts);
-      setPost(protoPost)
-    })    
+      setPost(protoPost);
+    })
   }
 
   const removePost = (a) => {
-    axios.delete(`${apiUrl}/posts/${a}`).then((resp)=>{
-      const newListaPosts = listaPosts.filter((curElem, index) => {
-        return index != a;
-      })
-      setListaPosts(newListaPosts);
+    axios.delete(`${apiUrl}/posts/${a}`).then((resp) => {
+      // console.log(resp);
+      setListaPosts(resp.data);
     })
-
   }
 
   const printPosts = listaPosts.map((curPost, i) => {
     return (<div key={i} id={curPost.id} className="d-flex align-items-start mt-5 gap-1">
       <div className="post-card col">
-        <div><img className="imm" src={`${apiUrl}/${curPost.image}`} alt="" />{apiUrl}/{curPost.image}</div>
+        {curPost.image.startsWith("https") ?
+        <div><img className="imm" src={`${curPost.image}`} alt="" /></div>
+        : <div> <img className="imm" src={`${apiUrl}/${curPost.image}`} alt="" /></div>}
         <div className="card-inside">
           <h4>{curPost.title}</h4>
           <p>{curPost.content}</p>
@@ -72,7 +70,7 @@ function App() {
       newValue = event.target.checked;
     } else {
       newValue = event.target.value;
-    } 
+    }
 
     let newPost = {
       ...post,
@@ -118,7 +116,7 @@ function App() {
 
         {/* TITOLO DEI POSTS */}
         <div>
-          <div className="row row-cols-3">
+          <div className="row row-cols-3 mb-5">
             {printPosts}
           </div>
         </div>
