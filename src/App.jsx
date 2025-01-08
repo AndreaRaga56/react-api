@@ -5,7 +5,6 @@ import { useEffect } from "react";
 function App() {
   
   let protoPost = {
-    id:"",
     title: "",
     image: "",
     content: "",
@@ -16,9 +15,6 @@ function App() {
   let [listaPosts, setListaPosts] = useState([])
   let [post, setPost] = useState(protoPost)
   let apiUrl = "http://localhost:3333"
-
-
-
 
   useEffect(() => {
     console.log("partito")
@@ -34,25 +30,24 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    let newPost ={
-      ...post,
-      id: Date.now()
-    }
-    // console.log(newPost)
-    axios.post(`${apiUrl}/posts`).then((resp))
 
-    let newListaPosts = [...listaPosts, newPost]
-    setListaPosts(newListaPosts);
-    setPost(protoPost)
-    console.log(listaPosts);
-    // console.log(newListaPosts)
+    // console.log(newPost)
+    axios.post(`${apiUrl}/posts`, post).then((resp)=>{
+      let newPost=resp.data
+      let newListaPosts = [...listaPosts, newPost]
+      setListaPosts(newListaPosts);
+      setPost(protoPost)
+    })    
   }
 
-  const removePost = (id) => {
-    const newListaPosts = listaPosts.filter((curElem, index) => {
-      return index != id
+  const removePost = (a) => {
+    axios.delete(`${apiUrl}/posts/${a}`).then((resp)=>{
+      const newListaPosts = listaPosts.filter((curElem, index) => {
+        return index != a;
+      })
+      setListaPosts(newListaPosts);
     })
-    setListaPosts(newListaPosts)
+
   }
 
   const printPosts = listaPosts.map((curPost, i) => {
@@ -64,7 +59,7 @@ function App() {
           <p>{curPost.content}</p>
           {/* <p>{curPost.tags}</p> */}
         </div>
-        <div><button onClick={() => { removePost(i) }} className="btn btn-outline-danger del">🗑</button></div>
+        <div><button onClick={() => { removePost(curPost.id) }} className="btn btn-outline-danger del">🗑</button></div>
       </div>
     </div>)
   })
