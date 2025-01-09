@@ -13,7 +13,7 @@ function App() {
   }
 
   let [listaPosts, setListaPosts] = useState([])
-  let [post, setPost] = useState(protoPost)
+  let [post, setPost] = useState("")
   let apiUrl = "http://localhost:3333"
 
   useEffect(() => {
@@ -24,19 +24,14 @@ function App() {
   const getPosts = () => {
     axios.get(`${apiUrl}/posts`).then((resp) => {
       setListaPosts(resp.data.blogPosts);
-      console.log(listaPosts);
+      setPost(protoPost);
     });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault()
-
-    // console.log(newPost)
-    axios.post(`${apiUrl}/posts`, post).then((resp) => {
-      let newPost = resp.data;
-      let newListaPosts = [...listaPosts, newPost];
-      setListaPosts(newListaPosts);
-      setPost(protoPost);
+    axios.post(`${apiUrl}/posts`, post).then(() => {
+      getPosts();
     })
   }
 
@@ -51,8 +46,8 @@ function App() {
     return (<div key={i} id={curPost.id} className="d-flex align-items-start mt-5 gap-1">
       <div className="post-card col">
         {curPost.image.startsWith("https") ?
-        <div><img className="imm" src={`${curPost.image}`} alt="" /></div>
-        : <div> <img className="imm" src={`${apiUrl}/${curPost.image}`} alt="" /></div>}
+          <div><img className="imm" src={`${curPost.image}`} alt="" /></div>
+          : <div> <img className="imm" src={`${apiUrl}/${curPost.image}`} alt="" /></div>}
         <div className="card-inside">
           <h4>{curPost.title}</h4>
           <p>{curPost.content}</p>
