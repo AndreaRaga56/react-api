@@ -33,3 +33,8 @@
     bottom: 5px;
     right: 5px;
 }
+
+.tag{
+    font-style: italic;
+    font-size: 14px;
+}

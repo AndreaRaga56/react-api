@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import axios from 'axios';
+import AppCard from "./components/AppCard";
 
 function App() {
 
@@ -8,11 +9,12 @@ function App() {
     title: "",
     image: "",
     content: "",
-    // tags: "",
+    tags: "",
     // pubblicato: false
   }
 
   let [listaPosts, setListaPosts] = useState([])
+  console.log(listaPosts)
   let [post, setPost] = useState("")
   let apiUrl = "http://localhost:3333"
 
@@ -36,26 +38,17 @@ function App() {
   }
 
   const removePost = (a) => {
-    axios.delete(`${apiUrl}/posts/${a}`).then((resp) => {
-      // console.log(resp);
-      setListaPosts(resp.data);
+    axios.delete(`${apiUrl}/posts/${a}`).then(() => {
+      getPosts()
     })
   }
 
-  const printPosts = listaPosts.map((curPost, i) => {
-    return (<div key={i} id={curPost.id} className="d-flex align-items-start mt-5 gap-1">
-      <div className="post-card col">
-        {curPost.image.startsWith("https") ?
-          <div><img className="imm" src={`${curPost.image}`} alt="" /></div>
-          : <div> <img className="imm" src={`${apiUrl}/${curPost.image}`} alt="" /></div>}
-        <div className="card-inside">
-          <h4>{curPost.title}</h4>
-          <p>{curPost.content}</p>
-          {/* <p>{curPost.tags}</p> */}
-        </div>
-        <div><button onClick={() => { removePost(curPost.id) }} className="btn btn-outline-danger del">🗑</button></div>
+  const printPosts = listaPosts.map((curPost) => {
+    return ( 
+      <div key={curPost.id} id={curPost.id} className="d-flex align-items-start mt-5 gap-1">
+        <AppCard cardPost={curPost} del={()=>removePost(curPost.id)} />
       </div>
-    </div>)
+    )
   })
 
   const handleOnChange = (event) => {
