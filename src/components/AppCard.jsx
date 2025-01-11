@@ -3,19 +3,13 @@
 function AppCard({ cardPost, del }) {
     let apiUrl = "http://localhost:3333"
 
-    console.log(cardPost.tags)
-    let newArray
+
+    let newArray = []
     if (cardPost.tags != false){
         newArray = cardPost.tags.map((curTag, i) => {
-            if (i!=cardPost.tags.length-1){
-                return <span key={i} >{curTag}, </span>
-            } else {
-                return <span key={i} >{curTag}.</span>
-            }
+                return <span key={i} >#{curTag} </span>
         })
     }
-
-
 
     return (
         <div className="post-card col">
