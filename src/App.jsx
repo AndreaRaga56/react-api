@@ -16,18 +16,17 @@ function App() {
   let [listaPosts, setListaPosts] = useState([])
   let [listaTags, setListaTags] = useState([])
   let [post, setPost] = useState("")
-  let [tagFiltro, setTagFiltro] = useState(false)
+  let [tagFiltro, setTagFiltro] = useState("all")
   let apiUrl = "http://localhost:3333"
 
   useEffect(() => {
     console.log("partito")
     getPosts();
-    getTags()
+    getTags();
   }, []);
 
   const getPosts = () => {
     axios.get(`${apiUrl}/posts`).then((resp) => {
-      console.log(resp.data.blogPosts)
       setListaPosts(resp.data.blogPosts);
       setPost(protoPost);
     });
@@ -53,7 +52,6 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault()
     axios.post(`${apiUrl}/posts`, post).then(() => {
-      console.log(post)
       getPosts();
     })
   }
@@ -65,20 +63,18 @@ function App() {
   }
 
   const printPosts = listaPosts.map((curPost) => {
-    console.log(curPost.tags.includes(curPost.tags[0]))
-    console.log(curPost.tags, curPost.tags[0], tagFiltro)
 
-
-    if (curPost.tags.includes(tagFiltro)){
-      return (
-        <div key={curPost.id} id={curPost.id} className="d-flex align-items-start mt-5 gap-1">
+    if (tagFiltro === "all") {
+      return (<div key={curPost.id} id={curPost.id} className="d-flex align-items-start mt-5 gap-1">
+        <AppCard cardPost={curPost} del={() => removePost(curPost.id)} />
+      </div>)
+    } else if (curPost.tags.includes(tagFiltro)) {
+      return (<div key={curPost.id} id={curPost.id} className="d-flex align-items-start mt-5 gap-1">
           <AppCard cardPost={curPost} del={() => removePost(curPost.id)} />
-        </div>
-      )
+        </div>)
     } else {
       return (false)
     }
-
   })
 
   const printTags = listaTags.map((curTag, i) => {
@@ -100,16 +96,15 @@ function App() {
       array.push(event.target.value)
       newValue = [...array];
     }
-    
-      let newPost = {
-        ...post,
-        [newChiave]: newValue,
-      }
-      console.log(newPost)
-      setPost(newPost)
+
+    let newPost = {
+      ...post,
+      [newChiave]: newValue,
+    }
+    setPost(newPost)
   }
 
-  const filtra = (event) =>{
+  const filtra = (event) => {
     let newValue = event.target.value;
     setTagFiltro(newValue)
   }
